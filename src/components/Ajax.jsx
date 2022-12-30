@@ -48,7 +48,9 @@ export const Ajax = () => {
 
 const getusuariosasyn = async()=>{
     const peticion  = await fetch ("https://reqres.in/api/users?page=2");
+    //esta destructurado la peticion
     const {data} = await peticion.json();
+    Setusuarios(data)
     console.log(data);
 }
 
