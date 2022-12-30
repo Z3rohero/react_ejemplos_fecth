@@ -4,7 +4,8 @@ export const Ajax = () => {
 
     const [usuarios, Setusuarios] = useState([]);
     const [cargando,setCargando] = useState(true)
-  //basico para rellenas el usuario
+    const [errores,setErrores] = useState("")
+    //basico para rellenas el usuario
 
   const GetusuariosEs = () => {
     Setusuarios([
@@ -67,12 +68,18 @@ const getusuariosasyn = ()=>{
 
 const getusuariosasyn = async()=>{
 
+    try{
     const peticion  = await fetch ("https://reqres.in/api/users?page=2");
     //esta destructurado la peticion
     const {data} = await peticion.json();
     Setusuarios(data)
     setCargando(false);
-    console.log(data);
+
+    }catch (error){
+        console.log( error);
+        setErrores(error.message)
+    }
+
 }
 
 
@@ -94,14 +101,21 @@ const getusuariosasyn = async()=>{
     getusuariosasyn();
   }, [])
 
-  if(cargando == true ){
+  if( errores != ""){
+    return (
+        <div className="errores"> 
+        {errores}  
+         </div>
+      )
+
+  }else if(cargando == true ){
     return (
         <div className="'cargando"> 
         cargando datos .....
         </div>
       )
 
-  }else{return (
+  }else if (cargando == false && errores === "" ) {return (
     <div>
       <h2>Listado de usuarios por ajax</h2>
 
@@ -111,7 +125,7 @@ const getusuariosasyn = async()=>{
             <li key={user.id}> <img src={user.avatar} width="40"/>
               &nbsp;
               {user.first_name}
-              {user.last_name}{" "}
+              {user.last_name}
             </li>
           );
         })}
