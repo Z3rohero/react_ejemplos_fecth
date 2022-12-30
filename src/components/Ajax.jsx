@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 export const Ajax = () => {
-  const [usuarios, Setusuarios] = useState([]);
 
+    const [usuarios, Setusuarios] = useState([]);
+    const [cargando,setCargando] = useState(true)
   //basico para rellenas el usuario
 
   const GetusuariosEs = () => {
@@ -46,13 +47,34 @@ export const Ajax = () => {
 }
 
 
+/*
+const getusuariosasyn = ()=>{
+    
+    setTimeout(async ()=>{
+    const peticion  = await fetch ("https://reqres.in/api/users?page=2");    
+    const {data} = await peticion.json();
+    Setusuarios(data)
+    setCargando(false);
+
+    }, 3000)
+    
+
+}
+
+
+*/
+
+
 const getusuariosasyn = async()=>{
+
     const peticion  = await fetch ("https://reqres.in/api/users?page=2");
     //esta destructurado la peticion
     const {data} = await peticion.json();
     Setusuarios(data)
+    setCargando(false);
     console.log(data);
 }
+
 
 /* El useEfect para los estatatioc
   useEffect(() => {
@@ -71,14 +93,23 @@ const getusuariosasyn = async()=>{
   useEffect(() => {
     getusuariosasyn();
   }, [])
-  return (
+
+  if(cargando == true ){
+    return (
+        <div className="'cargando"> 
+        cargando datos .....
+        </div>
+      )
+
+  }else{return (
     <div>
       <h2>Listado de usuarios por ajax</h2>
 
       <ol>
         {usuarios.map((user) => {
           return (
-            <li key={user.id}>
+            <li key={user.id}> <img src={user.avatar} width="40"/>
+              &nbsp;
               {user.first_name}
               {user.last_name}{" "}
             </li>
@@ -86,5 +117,7 @@ const getusuariosasyn = async()=>{
         })}
       </ol>
     </div>
-  );
+  );}
+  
+  
 };
